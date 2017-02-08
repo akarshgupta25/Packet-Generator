@@ -7,6 +7,9 @@ KERN_DIR=$BASE_DIR/pktGenKernMod
 EXE_NAME=pktGen
 EXE_PATH=/usr/bin
 
+KERN_MAJOR=`uname -r | grep -o -E '[0-9]+' | head -1 | sed -e 's/^0\+//'`
+export KERN_MAJOR
+
 echo ""
 echo "Installing Packet Generator....."
 cd $KERN_DIR

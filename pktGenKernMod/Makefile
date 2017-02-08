@@ -9,7 +9,7 @@ obj-m += pktGen.o
 pktGen-objs := pkt_main.o pkt_util.o 
 
 all:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+	KCPPFLAGS=-DKERN_VER_$(KERN_MAJOR) make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean

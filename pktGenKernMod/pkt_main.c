@@ -177,11 +177,13 @@ int SendDataFromInterface (tCmdLineArg cmdLineArg, char *pktData,
     {
         memset (&msg, 0, sizeof(msg));
         memset (&iov, 0, sizeof(iov));
+#ifdef KERN_VER_4
         iov.iov_base = pktData;
         iov.iov_len = pktLen;
         msg.msg_iter.type = ITER_IOVEC;
         msg.msg_iter.iov = &iov;
         msg.msg_iter.count = pktLen;
+#endif
         old_fs = get_fs();
         set_fs(KERNEL_DS);
         msgLen = sock_sendmsg (socket, &msg);
