@@ -177,23 +177,34 @@ int SendDataFromInterface (tCmdLineArg cmdLineArg, char *pktData,
     {
         memset (&msg, 0, sizeof(msg));
         memset (&iov, 0, sizeof(iov));
+#ifdef KERN_VER_3
+        iov.iov_base = pktData;
+        iov.iov_len = pktLen;
+        msg.msg_iov = &iov;
+        msg.msg_iovlen = 1;
+#endif /* KERN_VER_3 */
 #ifdef KERN_VER_4
         iov.iov_base = pktData;
         iov.iov_len = pktLen;
         msg.msg_iter.type = ITER_IOVEC;
         msg.msg_iter.iov = &iov;
         msg.msg_iter.count = pktLen;
-#endif
+#endif /* KERN_VER_4 */
         old_fs = get_fs();
         set_fs(KERNEL_DS);
+#ifdef KERN_VER_3
+        msgLen = sock_sendmsg (socket, &msg, pktLen);
+#endif /* KERN_VER_3 */
+#ifdef KERN_VER_4
         msgLen = sock_sendmsg (socket, &msg);
+#endif /* KERN_VER_4 */
+        set_fs(old_fs);
         if (msgLen == 0)
         {
             printk (KERN_CRIT "Failed to send message from data "
                               "socket!!\r\n");
             pErrStr = "Failed to send message";
         }
-        set_fs(old_fs);
         msleep (1000 * cmdLineArg.pktInterval);
     }
 

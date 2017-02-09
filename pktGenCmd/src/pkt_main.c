@@ -217,7 +217,7 @@ int SendDataToKernel (tCmdLineArg cmdLineArg, char *pktData,
     memset (nlMsg, 0, nlMsgLen);
 
     nlMsgParser = nlMsg;
-    nlMsgParser->nlmsg_len = NLMSG_SPACE (pktLen);
+    nlMsgParser->nlmsg_len = pktLen + NLMSG_HDRLEN;
     nlMsgParser->nlmsg_pid = getpid();
     nlMsgParser->nlmsg_flags = NLM_F_MULTI;
     memcpy (NLMSG_DATA (nlMsgParser), pktData, pktLen);
